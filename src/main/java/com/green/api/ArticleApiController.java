@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -56,7 +57,7 @@ public class ArticleApiController {
 	// {"id":1, "title":"새글", "content":"새글 내용"} -> 400 error
 	// {"title":"새글", "content":"새글 내용"}         -> 200 error
 	// HttpStatus.Ok          : 200
-	// HttpStatus.BAD.REQUEST : 400 
+	// HttpStatus.BAD.REQUEST : 400  - 사용자가 만든 error(user defined) 
 	// .body(null) == .build()
 	// @RequestBody : json string 으로 넘어오는 값을 java 의 객체(ArticleFor)로 저장
 	@PostMapping("/api/articles")
@@ -81,11 +82,57 @@ public class ArticleApiController {
 		ResponseEntity<Article> result
 		  = (updated != null) 
 				?  ResponseEntity.status(HttpStatus.OK).body(updated)
-				:  ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+				:  ResponseEntity.status(HttpStatus.BAD_REQUEST).build(); // 400 error
 				
 		return result;
 	}
 	
 	
 	// DELETE   : DELETE
+	@DeleteMapping("/api/articles/{id}")
+	public ResponseEntity<Article> delete(@PathVariable Long id, @RequestBody ArticleForm dto){
+		System.out.println("id:" + id + ",dto:" + dto);
+		Article deleted = articleService.delete(id);
+		ResponseEntity<Article> result
+		= (deleted != null) 
+		?  ResponseEntity.status(HttpStatus.NO_CONTENT).build()
+		:  ResponseEntity.status(HttpStatus.BAD_REQUEST).build(); // 400 error
+		
+		return result;
+	}
+	
+	/*
+	[ 
+       {title:"시간 예약"  , content:"1240"},
+       {title:"테이블 지정", content:"A12"},
+       {title:"메뉴 선택"  , content:"Branch A"}
+    ]
+	 */
+	 
+	// Transaction : 세 개의 data 를 받아서 서비스 함수에 넘겨주고 결과를 받는다
+	@PostMapping("/api/transaction-test")
+	public ResponseEntity<List<Article>> transactionTest(@RequestBody List<ArticleForm> dtos){
+		
+		List<Article> createdList = articleService.createArticles(dtos);
+		
+		ResponseEntity<List<Article>> result
+		= (createdList != null) 
+		?  ResponseEntity.status(HttpStatus.OK).body(createdList)
+		:  ResponseEntity.status(HttpStatus.BAD_REQUEST).build(); // 400 error
+		
+		return result; 
+	}
+	
+	@PostMapping("/api/transaction-test2")
+	public ResponseEntity<List<Article>> transactionTest2(@RequestBody List<ArticleForm> dtos){
+		
+		List<Article> createdList = articleService.createArticles2(dtos);
+		
+		ResponseEntity<List<Article>> result
+		= (createdList != null) 
+		?  ResponseEntity.status(HttpStatus.OK).body(createdList)
+				:  ResponseEntity.status(HttpStatus.BAD_REQUEST).build(); // 400 error
+		
+		return result; 
+	}
 }
