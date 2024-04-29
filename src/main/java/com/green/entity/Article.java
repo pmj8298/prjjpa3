@@ -10,11 +10,12 @@ import lombok.Setter;
 
 // 실제 database 의 table 구조를 만든다 : Create Table 을 실행함
 // import jakarta.persistence.
-// Entity 에서 column 을 잡을 때 첫글자 대문자로 씀 ex-Long / 왜냐면 long 을 쓰게 되면 null 입력안됨
+// Entity 에서 column 을 잡을 때 첫글자 대문자로 씀 ex-Long / 왜냐면 long 을 쓰게 되면 null 입력안됨 -> Long
 // table 도 만들고 insert 할 대 저장하는 역할
 // @nonnull, @null 사용도 가능
 // @NoArgsConstructor : 기본생성자 - default constructor
 // Getter / Setter 없으면 toString이 값을 꺼낼때 문제 생겨서 수정용 데이터를 못받아옴
+// @Entity - vo 역할 함
 @Entity
 @NoArgsConstructor
 @Setter

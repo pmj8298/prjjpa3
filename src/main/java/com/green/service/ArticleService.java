@@ -9,6 +9,11 @@ import com.green.dto.ArticleForm;
 import com.green.entity.Article;
 import com.green.repository.ArticleRepository;
 
+import lombok.extern.slf4j.Slf4j;
+
+// @Service가 있어야 service 로 인식함
+// ArticleApiController에서 ArticleService를 @Autowired 하기 위해
+@Slf4j
 @Service
 public class ArticleService {
 	@Autowired
@@ -17,6 +22,7 @@ public class ArticleService {
 	// article 목록 조회
 	public List<Article> index() {
 		// db 저장하기 전 작업할 코딩 넣는다
+		// JPA 함수: findAll() -> 이미 만들어져 있기 때문에 따로 만들어서 쓸 필요가 없음
 		return articleRepository.findAll();
 	}
 	
@@ -39,5 +45,23 @@ public class ArticleService {
 		
 		Article saved = articleRepository.save(article);
 		return saved;
+	}
+
+	public Article update(Long id, ArticleForm dto) {
+		// 1. DTO를 저장하기 위한 Entity 로 변환
+		Article article = dto.toEntity();
+		log.info("id: {}, article:{}",id,article.toString()); // {}가 parameter
+		
+		// 2. target 을 id 로 조회하기
+		Article target = articleRepository.findById(id).orElse(null);
+		
+		// 3. 잘못된 요청을 처리
+		if(target == null || id !=article.getId()) {
+			log.info("id: {}, article:{}",id,article.toString());
+			return null;
+		}
+		
+		// 4. 업데이트 및 정상응답(ok)을 수행해야 한다
+		return null;
 	}
 }
