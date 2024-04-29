@@ -16,8 +16,8 @@
   </fieldset>
   <div id="output"></div>
   <ul>
-    <li><a id="get"    href="/api/articles">  Article 목록 조회(get)</a></li>
-    <li><a id="getOne" href="/api/articles">1번 Article 목록 조회(get)</a></li>
+    <li><a id="get"    href="/api/articles">Article 목록 조회(get)</a></li>
+    <li><a id="getOne" href="/api/articles">1개의 글 조회(get)</a></li>
     <li><a id="post"   href="/api/articles">새 글 추가(post)</a></li>
     <li><a id="patch"  href="/api/articles">글 수정(patch)</a></li>
     <li><a id="delete" href="/api/articles">글 삭제(delete)</a></li>
@@ -53,6 +53,9 @@
     	  .then( response => response.json() ) // json = JSON.parse()
     	  .then( json     => {
     		  outputEl.innerHTML = JSON.stringify(json);
+    		  document.querySelector('#id').value      = json.id; 
+    		  document.querySelector('#title').value   = json.title; 
+    		  document.querySelector('#content').value = json.content; 
     	  } )
     	  .catch( error => console.dir(error) )
     	  break;
@@ -98,7 +101,7 @@
     			  },
     			  body: JSON.stringify({
    //넘겨주는 parameter 값 : 변수
-                  //  id     : id,
+                    id     : id,
     			    title  : title,
     			    content: content,
     			  }),	  

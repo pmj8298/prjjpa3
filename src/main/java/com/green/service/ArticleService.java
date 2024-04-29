@@ -52,16 +52,19 @@ public class ArticleService {
 		Article article = dto.toEntity();
 		log.info("id: {}, article:{}",id,article.toString()); // {}가 parameter
 		
-		// 2. target 을 id 로 조회하기
+		// 2. target(기존글) 을 id 로 조회하기
 		Article target = articleRepository.findById(id).orElse(null);
 		
 		// 3. 잘못된 요청을 처리
 		if(target == null || id !=article.getId()) {
 			log.info("id: {}, article:{}",id,article.toString());
-			return null;
+			return null; // 조회한 자료가 없거나 id 가 틀리면
 		}
 		
 		// 4. 업데이트 및 정상응답(ok)을 수행해야 한다
-		return null;
+		target.patch(article);
+		Article updated = articleRepository.save(target);
+		
+		return updated;
 	}
 }
